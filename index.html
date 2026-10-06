@@ -1,576 +1,259 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Team LUNAR — UMD Gemstone Honors College</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --white:     #ffffff;
-      --off-white: #e2e8f0;
-      --muted:     #94a3b8;
-      --bg:        #050508;
-      --font-h:    'Barlow Condensed', sans-serif;
-      --font-b:    'Barlow', sans-serif;
-
-      /* accent palette — used only for label text */
-      --c-green:   #4ade80;
-      --c-purple:  #c084fc;
-      --c-gold:    #fbbf24;
-      --c-red:     #f87171;
-      --c-blue:    #60a5fa;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--white);
-      font-family: var(--font-b);
-      font-size: 16px;
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* ── Background ── */
-    .bg-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-
-    .bg-moon {
-      background:
-        radial-gradient(ellipse 120% 60% at 50% 130%, rgba(55,50,45,0.8) 0%, rgba(28,26,22,0.55) 40%, transparent 70%),
-        radial-gradient(ellipse 80% 40% at 80% 115%, rgba(38,36,32,0.65) 0%, transparent 60%);
-    }
-
-    .bg-nebula {
-      background:
-        radial-gradient(ellipse 60% 40% at 20% 60%, rgba(90,15,160,0.07), transparent 70%),
-        radial-gradient(ellipse 50% 30% at 80% 40%, rgba(15,70,160,0.05), transparent 70%);
-    }
-
-    canvas#starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-
-    /* ── Nav ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 200;
-      padding: 14px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(5,5,8,0.88);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .nav-logo {
-      font-family: var(--font-h);
-      font-size: 1.3rem;
-      font-weight: 900;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--white);
-      text-decoration: none;
-    }
-
-    .nav-links { display: flex; gap: 28px; list-style: none; }
-
-    .nav-links a {
-      font-family: var(--font-h);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--white); }
-
-    /* ── Page wrapper ── */
-    .page { position: relative; z-index: 1; }
-
-    /* ── Hero ── */
-    #hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 140px 32px 80px;
-      text-align: center;
-      position: relative;
-    }
-
-    .hero-star {
-      font-size: 2rem;
-      color: var(--white);
-      margin-bottom: 12px;
-      display: block;
-      filter: drop-shadow(0 0 10px rgba(255,255,255,0.6));
-    }
-
-    h1.hero-title {
-      font-family: var(--font-h);
-      font-size: clamp(4rem, 14vw, 9rem);
-      font-weight: 900;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--white);
-      line-height: 1;
-      text-shadow: 0 0 60px rgba(255,255,255,0.08);
-    }
-
-    .hero-rule {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      width: min(700px, 90vw);
-      margin: 18px auto 28px;
-    }
-    .hero-rule-line {
-      flex: 1;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
-    }
-    .hero-rule-star { color: rgba(255,255,255,0.7); font-size: 1rem; }
-
-    .hero-sub {
-      font-family: var(--font-h);
-      font-size: clamp(0.8rem, 1.8vw, 1rem);
-      font-weight: 600;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 40px;
-    }
-
-    .scroll-hint {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: var(--font-h);
-      font-size: 0.6rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.25);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      animation: scrollBounce 2s ease-in-out infinite;
-    }
-    .scroll-hint::after {
-      content: '';
-      display: block;
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.25), transparent);
-    }
-    @keyframes scrollBounce {
-      0%,100% { transform: translateX(-50%) translateY(0); }
-      50%      { transform: translateX(-50%) translateY(6px); }
-    }
-
-    /* ── Layout ── */
-    .content-section { padding: 80px 0; }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 32px;
-    }
-
-    .section-rule {
-      border: none;
-      border-top: 1px solid rgba(255,255,255,0.06);
-    }
-
-    /* ── Card grid ── */
-    .card-grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    .card-grid-3 {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 20px;
-    }
-
-    /* ── Universal card — same as approach-card ── */
-    .card {
-      border: 2px solid rgba(255,255,255,0.1);
-      border-radius: 4px;
-      padding: 32px 28px;
-      background: rgba(255,255,255,0.02);
-      transition: border-color 0.25s, background 0.25s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card:hover {
-      border-color: rgba(147,51,234,0.55);
-      background: rgba(147,51,234,0.05);
-    }
-
-    /* Top accent line that appears on hover */
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(147,51,234,0.7), transparent);
-      opacity: 0;
-      transition: opacity 0.25s;
-    }
-    .card:hover::before { opacity: 1; }
-
-    /* Card label / heading */
-    .card-label {
-      font-family: var(--font-h);
-      font-size: clamp(1rem, 2vw, 1.25rem);
-      font-weight: 900;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-      display: block;
-    }
-
-    .label-green  { color: var(--c-green); }
-    .label-purple { color: var(--c-purple); }
-    .label-gold   { color: var(--c-gold); }
-    .label-red    { color: var(--c-red); }
-    .label-blue   { color: var(--c-blue); }
-    .label-white  { color: var(--white); }
-
-    /* Card body text */
-    .card-text {
-      font-family: var(--font-h);
-      font-size: clamp(0.88rem, 1.5vw, 1.05rem);
-      font-weight: 400;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.65);
-      line-height: 1.7;
-    }
-
-    /* Bullet list inside cards */
-    .card-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .card-list li {
-      font-family: var(--font-h);
-      font-size: clamp(0.88rem, 1.5vw, 1.05rem);
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.65);
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-    }
-
-    .card-list li::before {
-      content: '•';
-      color: var(--c-purple);
-      font-size: 1.2rem;
-      line-height: 1;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .card-list li strong { color: var(--c-red); font-weight: 700; }
-
-    /* ── Footer ── */
-    footer {
-      border-top: 1px solid rgba(255,255,255,0.07);
-      padding: 52px 0 40px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 40px;
-      flex-wrap: wrap;
-    }
-
-    .footer-left { display: flex; flex-direction: column; gap: 6px; }
-
-    .footer-title {
-      font-family: var(--font-h);
-      font-size: 1.8rem;
-      font-weight: 900;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--white);
-    }
-
-    .footer-orgs {
-      font-family: var(--font-h);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .footer-copy {
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.18);
-      margin-top: 4px;
-    }
-
-    /* Logo row */
-    .footer-logos {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-    }
-
-    .logo-img {
-      height: 72px;
-      width: auto;
-      object-fit: contain;
-      display: block;
-      transition: transform 0.2s, opacity 0.2s;
-      opacity: 0.92;
-    }
-
-    /* UMD seal has black bg — keep it visible on dark bg */
-    .logo-img.logo-umd {
-      height: 76px;
-      border-radius: 50%;
-    }
-
-    /* Gemstone shield — teal on transparent, fine on dark */
-    .logo-img.logo-shield { height: 68px; }
-
-    /* Gemstone "g" — black on white originally; invert so it reads on dark bg */
-    .logo-img.logo-g {
-      height: 68px;
-      filter: invert(1);
-    }
-
-    .logo-img:hover { transform: scale(1.08); opacity: 1; }
-
-    /* ── Fade-in ── */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
-    }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-    /* ── Responsive ── */
-    @media (max-width: 900px) {
-      .card-grid-3 { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (max-width: 768px) {
-      nav { padding: 12px 20px; }
-      .nav-links { display: none; }
-      .card-grid-2,
-      .card-grid-3 { grid-template-columns: 1fr; }
-      .content-section { padding: 56px 0; }
-      .footer-inner { flex-direction: column; align-items: flex-start; }
-    }
-
-    @media (max-width: 500px) {
-      h1.hero-title { letter-spacing: 0.15em; }
-      .footer-logos { gap: 18px; }
-      .logo-img,
-      .logo-img.logo-umd,
-      .logo-img.logo-shield,
-      .logo-img.logo-g { height: 52px; }
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f2eb">
+  <meta name="description" content="Team LUNAR is a University of Maryland Gemstone Honors research team designing a lunar rover capable of payload transportation and recovery.">
+  <title>Team LUNAR · UMD Gemstone</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='38' fill='%23f5f2eb' stroke='%2324231f' stroke-width='6'/%3E%3Ccircle cx='38' cy='40' r='9' fill='none' stroke='%2324231f' stroke-width='4' opacity='.45'/%3E%3Ccircle cx='61' cy='61' r='12' fill='none' stroke='%2324231f' stroke-width='4' opacity='.45'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400..700&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/team.css">
+  <script src="js/main.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-<div class="bg-layer bg-moon"></div>
-<div class="bg-layer bg-nebula"></div>
-<canvas id="starfield"></canvas>
-
-<!-- Nav -->
-<nav>
-  <a href="#hero" class="nav-logo">Team Lunar</a>
-  <ul class="nav-links">
-    <li><a href="#project">Project</a></li>
-    <li><a href="#problem">Problem</a></li>
-  </ul>
-</nav>
-
-<div class="page">
-
-  <!-- ── Hero ── -->
-  <section id="hero">
-    <span class="hero-star">✦</span>
-    <h1 class="hero-title">Team Lunar</h1>
-    <div class="hero-rule">
-      <div class="hero-rule-line"></div>
-      <span class="hero-rule-star">✦</span>
-      <div class="hero-rule-line"></div>
-    </div>
-    <p class="hero-sub">UMD Gemstone Honors College &nbsp;·&nbsp; University of Maryland</p>
-    <div class="scroll-hint">Scroll</div>
-  </section>
-
-  <!-- ── Row 1: Our Project · Research Need · Design ── -->
-  <section class="content-section" id="project">
-    <div class="container">
-      <div class="card-grid-3 fade-in">
-
-        <div class="card">
-          <span class="card-label label-green">Our Project:</span>
-          <p class="card-text">
-            We aim to design and test a rover that will be able to effectively transport materials and facilitate exploration of the Moon.
-          </p>
-        </div>
-
-        <div class="card">
-          <span class="card-label label-purple">Research Need:</span>
-          <p class="card-text">
-            With NASA's plan to build a lunar base in the near future, a method of transportation around the Moon and to the base is needed.
-          </p>
-        </div>
-
-        <div class="card">
-          <span class="card-label label-gold">Design:</span>
-          <p class="card-text">
-            We aim to design and create a lunar rover capable of payload transportation and recovery.
-          </p>
-        </div>
-
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#main" aria-label="Team LUNAR home">
+        <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+          <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" stroke-width="3.6"/>
+          <circle cx="38" cy="40" r="8" fill="none" stroke="currentColor" stroke-width="1.62" opacity=".35"/>
+          <circle cx="61" cy="61" r="11" fill="none" stroke="currentColor" stroke-width="1.62" opacity=".35"/>
+          <circle cx="62" cy="34" r="2.9" fill="currentColor"/>
+        </svg>
+        <span>LUNAR</span>
+      </a>
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a href="#research">Research</a>
+        <a href="#problem">Problem</a>
+        <a href="#directions">Directions</a>
+      </nav>
+      <div class="header-actions">
+        <a class="button button-solid" href="#team">Meet the team <span aria-hidden="true">↓</span></a>
+        <button class="menu-toggle" type="button" data-menu-toggle aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span></button>
       </div>
     </div>
-  </section>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation" hidden>
+      <a href="#research">Research</a>
+      <a href="#problem">Problem</a>
+      <a href="#directions">Directions</a>
+      <a href="#team">Team</a>
+    </nav>
+  </header>
 
-  <hr class="section-rule" />
+  <main id="main">
+    <section class="page-intro wrap" id="research">
+      <p class="eyebrow">Research</p>
+      <h1>How do we move cargo<br>across the Moon?</h1>
+      <p class="lead">We aim to design and test a rover that will be able to effectively transport materials and facilitate exploration of the Moon.</p>
+      <span class="status-pill"><span aria-hidden="true"></span>UMD Gemstone Honors College</span>
+    </section>
 
-  <!-- ── Row 2: Statistics · Directions ── -->
-  <section class="content-section" id="problem">
-    <div class="container">
-      <div class="card-grid-2 fade-in">
-
-        <div class="card">
-          <span class="card-label label-red">Statistics:</span>
-          <ul class="card-list">
-            <li><strong>100%</strong>&nbsp;of rovers are&nbsp;<strong>not</strong>&nbsp;recovered after missions</li>
-            <li>Rovers often get stuck navigating the uneven terrain of the Moon</li>
-          </ul>
+    <section class="editorial-section wrap reveal" aria-labelledby="need-title">
+      <div class="editorial-grid">
+        <h2 id="need-title">The need</h2>
+        <div class="prose">
+          <p>With NASA’s plan to build a lunar base in the near future, a method of transportation around the Moon and to the base is needed.</p>
+          <p>We aim to design and create a lunar rover capable of payload transportation and recovery.</p>
         </div>
+      </div>
+    </section>
 
-        <div class="card">
-          <span class="card-label label-blue">Directions:</span>
-          <ul class="card-list">
-            <li>Swarm Theory</li>
-            <li>Cost-Efficiency</li>
-            <li>Wheel on Limb Concepts</li>
-            <li>Payload Lander Integration</li>
-          </ul>
+    <section class="editorial-section wrap reveal" id="problem" aria-labelledby="problem-title">
+      <div class="editorial-grid">
+        <h2 id="problem-title">The problem</h2>
+        <div class="prose">
+          <div class="stat">
+            <p class="stat-figure">100%</p>
+            <p class="stat-caption">of rovers are not recovered after missions.</p>
+          </div>
+          <p>Rovers often get stuck navigating the uneven terrain of the Moon.</p>
         </div>
-
       </div>
+    </section>
+
+    <section class="measure-section wrap reveal" id="directions" aria-labelledby="directions-title">
+      <div class="section-heading">
+        <h2 id="directions-title">Where we’re focusing</h2>
+        <p class="eyebrow">Research directions</p>
+      </div>
+      <div class="measure-grid">
+        <article class="measure-card">
+          <div class="measure-icon" aria-hidden="true"><svg viewBox="0 0 120 55"><path d="M14 40 44 16l30 24 30-24M44 16l30 24"/><circle cx="14" cy="40" r="5"/><circle cx="44" cy="16" r="5"/><circle cx="74" cy="40" r="5"/><circle cx="104" cy="16" r="5"/></svg></div>
+          <p class="eyebrow measure-num">01</p>
+          <h3>Swarm Theory</h3>
+        </article>
+        <article class="measure-card">
+          <div class="measure-icon" aria-hidden="true"><svg viewBox="0 0 120 55"><path d="M6 50h108M20 50V12M44 50V22M68 50V31M92 50V39"/></svg></div>
+          <p class="eyebrow measure-num">02</p>
+          <h3>Cost-Efficiency</h3>
+        </article>
+        <article class="measure-card">
+          <div class="measure-icon" aria-hidden="true"><svg viewBox="0 0 120 55"><path d="M32 10h56M40 10 28 26l8 12M80 10l12 16-8 12M6 51h108"/><circle cx="36" cy="42" r="8"/><circle cx="84" cy="42" r="8"/></svg></div>
+          <p class="eyebrow measure-num">03</p>
+          <h3>Wheel-on-Limb Concepts</h3>
+        </article>
+        <article class="measure-card">
+          <div class="measure-icon" aria-hidden="true"><svg viewBox="0 0 120 55"><path d="M46 8h28v18H46zM46 26 34 48m40-22 12 22M28 48h12m40 0h12M60 26v10"/><circle cx="60" cy="42" r="5"/></svg></div>
+          <p class="eyebrow measure-num">04</p>
+          <h3>Payload Lander Integration</h3>
+        </article>
+      </div>
+    </section>
+
+    <section id="team" aria-labelledby="team-title">
+      <div class="roster-section wrap reveal">
+        <div class="section-heading">
+          <h2 id="team-title">The people behind LUNAR</h2>
+          <p class="eyebrow">Team · UMD Gemstone</p>
+        </div>
+        <ul class="team-grid">
+          <li class="team-member">
+            <img class="member-photo" src="images/team/adish-katwal.webp" alt="Adish Katwal" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Adish Katwal</h3>
+            <p class="member-role">Team Liaison</p>
+            <p class="member-study">Aerospace Engineering</p>
+            <a class="member-email" href="mailto:jungkat@terpmail.umd.edu">jungkat@<wbr>terpmail.umd.edu</a>
+          </li>
+          <li class="team-member">
+            <img class="member-photo" src="images/team/tomona-oishi.webp" alt="Tomona Oishi" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Tomona Oishi</h3>
+            <p class="member-role">Admin/Ops Liaison</p>
+            <p class="member-study">Computer Science &amp; Physics</p>
+            <a class="member-email" href="mailto:toishi@terpmail.umd.edu">toishi@<wbr>terpmail.umd.edu</a>
+          </li>
+          <li class="team-member">
+            <img class="member-photo" src="images/team/jacy-zhai.webp" alt="Jacy Zhai" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Jacy Zhai</h3>
+            <p class="member-role">Financial Liaison</p>
+            <p class="member-study">Physics</p>
+            <a class="member-email" href="mailto:jzhai123@terpmail.umd.edu">jzhai123@<wbr>terpmail.umd.edu</a>
+          </li>
+          <li class="team-member">
+            <img class="member-photo" src="images/team/ruqayya-khan.webp" alt="Ruqayya Khan" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Ruqayya Khan</h3>
+            <p class="member-role">Library Liaison</p>
+            <p class="member-study">Aerospace Engineering</p>
+            <a class="member-email" href="mailto:rkhan126@terpmail.umd.edu">rkhan126@<wbr>terpmail.umd.edu</a>
+          </li>
+          <li class="team-member">
+            <img class="member-photo" src="images/team/ethan-hedge.webp" alt="Ethan Hedge" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Ethan Hedge</h3>
+            <p class="member-role">Ombudsman</p>
+            <p class="member-study">Public Policy &amp; Information Science</p>
+            <a class="member-email" href="mailto:hedge@terpmail.umd.edu">hedge@<wbr>terpmail.umd.edu</a>
+          </li>
+          <li class="team-member">
+            <img class="member-photo" src="images/team/kit-kellam.webp" alt="Kit Kellam" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Kit Kellam</h3>
+            <p class="member-role">Ombudsman</p>
+            <p class="member-study">Mechanical Engineering</p>
+            <a class="member-email" href="mailto:kkellam1@terpmail.umd.edu">kkellam1@<wbr>terpmail.umd.edu</a>
+          </li>
+          <li class="team-member">
+            <img class="member-photo" src="images/team/mingyuan-chen.webp" alt="Mingyuan (Francois) Chen" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Mingyuan (Francois) Chen</h3>
+            <p class="member-role">Financial Liaison</p>
+            <p class="member-study">Mechanical Engineering</p>
+            <a class="member-email" href="mailto:mychen29@terpmail.umd.edu">mychen29@<wbr>terpmail.umd.edu</a>
+          </li>
+          <li class="team-member">
+            <img class="member-photo" src="images/team/daniel-yu.webp" alt="Daniel Yu" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Daniel Yu</h3>
+            <p class="member-study">Computer Engineering</p>
+            <a class="member-email" href="mailto:dyu12347@terpmail.umd.edu">dyu12347@<wbr>terpmail.umd.edu</a>
+          </li>
+          <li class="team-member">
+            <img class="member-photo" src="images/team/adam-zeineldin.webp" alt="Adam Zeineldin" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Adam Zeineldin</h3>
+            <p class="member-role">Media Liaison</p>
+            <p class="member-study">Computer Science</p>
+            <a class="member-email" href="mailto:azeineld@terpmail.umd.edu">azeineld@<wbr>terpmail.umd.edu</a>
+          </li>
+          <li class="team-member">
+            <img class="member-photo" src="images/team/victor-liu.webp" alt="Victor Liu" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Victor Liu</h3>
+            <p class="member-role">Media Liaison</p>
+            <p class="member-study">Computer Science &amp; Mathematics</p>
+            <a class="member-email" href="mailto:victorl@terpmail.umd.edu">victorl@<wbr>terpmail.umd.edu</a>
+          </li>
+          <li class="team-member">
+            <img class="member-photo" src="images/team/daniel-shchelochkov.webp" alt="Daniel Shchelochkov" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Daniel Shchelochkov</h3>
+            <p class="member-role">Admin/Ops Liaison</p>
+            <p class="member-study">Mechanical Engineering</p>
+            <a class="member-email" href="mailto:dshchelo@terpmail.umd.edu">dshchelo@<wbr>terpmail.umd.edu</a>
+          </li>
+          <li class="team-member">
+            <img class="member-photo" src="images/team/kenny-chen.webp" alt="Kenny Chen" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Kenny Chen</h3>
+            <p class="member-role">Mentor Liaison</p>
+            <p class="member-study">Applied Mathematics</p>
+            <a class="member-email" href="mailto:kchen144@terpmail.umd.edu">kchen144@<wbr>terpmail.umd.edu</a>
+          </li>
+          <li class="team-member">
+            <img class="member-photo" src="images/team/miguel-simeon.webp" alt="Miguel Simeon" width="640" height="800" loading="lazy" decoding="async">
+            <h3 class="member-name">Miguel Simeon</h3>
+            <p class="member-study">Aerospace Engineering</p>
+            <a class="member-email" href="mailto:msimeon@terpmail.umd.edu">msimeon@<wbr>terpmail.umd.edu</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="mentor-section wrap reveal">
+        <div class="mentor-card">
+          <p class="eyebrow">Faculty mentor</p>
+          <div class="mentor-content">
+            <img class="mentor-photo" src="images/team/eric-silk.webp" alt="Dr. Eric Silk" width="160" height="180" loading="lazy" decoding="async">
+            <h3>Dr. Eric Silk</h3>
+            <div>
+              <p>Ph.D., Mechanical Engineering<br>University of Maryland, College Park</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="next-page wrap reveal">
+      <span>Part of the Gemstone Honors Program</span>
+      <a href="https://gemstone.umd.edu/" target="_blank" rel="noopener noreferrer">Learn about Gemstone <span aria-hidden="true">↗</span></a>
     </div>
-  </section>
+  </main>
 
-</div><!-- /page -->
-
-<!-- ── Footer ── -->
-<footer>
-  <div class="container">
-    <div class="footer-inner">
-      <div class="footer-left">
-        <div class="footer-title">Team Lunar</div>
-        <div class="footer-orgs">UMD Gemstone Honors College &nbsp;·&nbsp; University of Maryland</div>
+  <footer class="site-footer wrap">
+    <div class="footer-top">
+      <a class="brand" href="#main" aria-label="Team LUNAR home">
+        <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+          <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" stroke-width="3.6"/>
+          <circle cx="38" cy="40" r="8" fill="none" stroke="currentColor" stroke-width="1.62" opacity=".35"/>
+          <circle cx="61" cy="61" r="11" fill="none" stroke="currentColor" stroke-width="1.62" opacity=".35"/>
+          <circle cx="62" cy="34" r="2.9" fill="currentColor"/>
+        </svg>
+        <span>LUNAR</span>
+      </a>
+      <div class="footer-affiliation">
+        <a class="umd-seal" href="https://umd.edu/" target="_blank" rel="noopener noreferrer" aria-label="University of Maryland">
+          <img src="logo-umd.png" alt="University of Maryland" width="2400" height="2400" loading="lazy" decoding="async">
+        </a>
+        <div class="affiliation-copy">
+          <a class="gemstone-logos" href="https://gemstone.umd.edu/" target="_blank" rel="noopener noreferrer" aria-label="Gemstone Honors College">
+            <img src="logo-gemstone-shield.png" alt="" width="165" height="190" loading="lazy" decoding="async">
+            <img src="logo-gemstone-g.png" alt="" width="1200" height="1600" loading="lazy" decoding="async">
+          </a>
+          <span>UMD Gemstone Honors College</span>
+        </div>
       </div>
-
-      <div class="footer-logos">
-        <!-- Save these images to the project folder with these exact filenames -->
-        <img class="logo-img logo-umd"    src="logo-umd.png"            alt="University of Maryland" />
-        <img class="logo-img logo-shield" src="logo-gemstone-shield.png" alt="Gemstone Honors College" />
-        <img class="logo-img logo-g"      src="logo-gemstone-g.png"      alt="Gemstone" />
-      </div>
+      <a class="footer-link" href="#main">Back to top <span aria-hidden="true">↑</span></a>
     </div>
-  </div>
-</footer>
-
-<script>
-/* ── Starfield ── */
-(function () {
-  const canvas = document.getElementById('starfield');
-  const ctx    = canvas.getContext('2d');
-  let W, H, stars = [];
-
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-
-  function mkStar() {
-    return {
-      x:     Math.random() * W,
-      y:     Math.random() * H,
-      r:     Math.random() * 1.3 + 0.2,
-      alpha: Math.random() * 0.8 + 0.1,
-      speed: Math.random() * 0.006 + 0.001,
-      phase: Math.random() * Math.PI * 2,
-    };
-  }
-
-  function init() { resize(); stars = Array.from({ length: 260 }, mkStar); }
-
-  let t = 0;
-  function draw() {
-    t++;
-    ctx.clearRect(0, 0, W, H);
-    stars.forEach(s => {
-      const a = s.alpha * (0.6 + 0.4 * Math.sin(t * s.speed + s.phase));
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200,215,255,${a})`;
-      ctx.fill();
-    });
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', () => { resize(); stars = Array.from({ length: 260 }, mkStar); });
-  init();
-  requestAnimationFrame(draw);
-})();
-
-/* ── Scroll fade-in ── */
-(function () {
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
-})();
-
-/* ── Nav darken on scroll ── */
-(function () {
-  const nav = document.querySelector('nav');
-  window.addEventListener('scroll', () => {
-    nav.style.background = window.scrollY > 50
-      ? 'rgba(5,5,8,0.97)' : 'rgba(5,5,8,0.88)';
-  });
-})();
-</script>
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> Team LUNAR</span>
+      <a href="#team">Team</a>
+    </div>
+  </footer>
 </body>
 </html>

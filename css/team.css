@@ -1,0 +1,93 @@
+/* ==========================================================================
+   Team LUNAR — team roster and faculty mentor card
+   ========================================================================== */
+
+.roster-section { padding-top: 60px; padding-bottom: 55px; border-top: 1px solid var(--line); }
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 36px 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.team-member { min-width: 0; }
+
+.member-photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center 25%;
+  border-radius: 5px;
+  background: var(--surface);
+}
+
+.member-name { margin-top: 13px; font-size: 20px; line-height: 1.3; letter-spacing: -.025em; }
+.member-role { margin-top: 4px; font-size: 14px; font-weight: 500; line-height: 1.45; }
+.member-study { margin-top: 4px; font-size: 14px; line-height: 1.45; color: var(--muted); }
+
+.member-email {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 9px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.member-email:hover { text-decoration-color: currentColor; }
+
+/* ── Faculty mentor ── */
+.mentor-section { padding-bottom: 65px; }
+.mentor-card { padding: 34px 40px 40px; border-radius: 10px; background: var(--sage); }
+.mentor-card > .eyebrow { margin-bottom: 30px; color: var(--muted); }
+
+.mentor-content {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 32px;
+}
+.mentor-photo {
+  width: 160px;
+  height: 180px;
+  object-fit: cover;
+  object-position: center 25%;
+  border-radius: 5px;
+}
+.mentor-content h3 { font: 400 38px/1.08 var(--serif); letter-spacing: -.035em; }
+.mentor-content p { font-size: 16px; line-height: 1.5; }
+
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+  .team-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 800px) {
+  .roster-section { padding-top: 45px; }
+  .team-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 20px; }
+  .mentor-content { grid-template-columns: 128px minmax(0, 1fr); gap: 20px 25px; }
+  .mentor-photo { width: 128px; height: 160px; grid-row: span 2; }
+  .mentor-content > div { grid-column: 2; }
+  .mentor-content h3 { font-size: 33px; }
+  .mentor-content p { font-size: 14px; }
+}
+
+@media (max-width: 520px) {
+  .roster-section { padding-top: 34px; padding-bottom: 28px; }
+  .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; }
+  .member-name { margin-top: 11px; font-size: 18px; }
+  .mentor-section { padding-bottom: 35px; }
+  .mentor-card { padding: 27px; }
+  .mentor-card > .eyebrow { margin-bottom: 25px; }
+  .mentor-content { display: block; }
+  .mentor-photo { width: 160px; height: 180px; margin-bottom: 23px; }
+  .mentor-content h3 { margin-bottom: 14px; font-size: 33px; }
+  .mentor-content p { font-size: 15px; }
+}
