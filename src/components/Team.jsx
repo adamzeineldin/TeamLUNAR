@@ -11,19 +11,7 @@ export default function Team() {
           </div>
           <p className="max-w-sm text-sm leading-relaxed text-muted">Our team is part of the Gemstone Honors Program at the University of Maryland.</p>
         </div>
-        <ul className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {team.map((member) => (
-            <li key={member.email} className="min-w-0 border-b border-line pb-6">
-              <img src={`${import.meta.env.BASE_URL}${member.image}`} alt={member.name} width="640" height="800" loading="lazy" decoding="async" className="aspect-4/5 w-full rounded-md bg-surface object-cover object-[center_25%]" />
-              <h3 className="mt-4 text-lg leading-snug font-medium tracking-tight">{member.name}</h3>
-              <p className="mt-1 text-sm font-medium">{member.role}</p>
-              <p className="mt-1 text-sm leading-relaxed text-muted">{member.study}</p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{member.bio}</p>
-              <a href={`mailto:${member.email}`} className="mt-2 block min-h-11 max-w-full content-center text-sm text-accent underline decoration-line underline-offset-4 hover:decoration-accent [overflow-wrap:anywhere]">{member.email.split('@')[0]}@<wbr />{member.email.split('@')[1]}</a>
-            </li>
-          ))}
-        </ul>
-        <section aria-labelledby="mentor-title" className="mt-14 border-t border-line pt-10 sm:mt-16 sm:pt-12">
+        <section aria-labelledby="mentor-title" className="mb-12 border-t border-line pt-10 sm:mb-16 sm:pt-12">
           <div className="grid gap-8 lg:grid-cols-[1fr_2fr] lg:gap-12">
             <div>
               <p className="text-xs uppercase tracking-widest text-muted">Faculty mentor</p>
@@ -39,6 +27,18 @@ export default function Team() {
             </div>
           </div>
         </section>
+        <ul className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          {team.map((member) => (
+            <li key={member.email} className="min-w-0 border-b border-line pb-6">
+              <img src={`${import.meta.env.BASE_URL}${member.image}`} alt={member.name} width="640" height="800" loading="lazy" decoding="async" className="aspect-4/5 w-full rounded-md bg-surface object-cover object-[center_25%]" />
+              <h3 className="mt-4 text-lg leading-snug font-medium tracking-tight">{member.name}</h3>
+              <p className="mt-1 text-sm font-medium">{member.role}</p>
+              <p className="mt-1 text-sm leading-relaxed text-muted">{member.study}</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{member.bio}</p>
+              <a href={`mailto:${member.email}`} className="mt-2 block min-h-11 max-w-full content-center text-sm text-accent underline decoration-line underline-offset-4 hover:decoration-accent [overflow-wrap:anywhere]">{member.email.split('@')[0]}@<wbr />{member.email.split('@')[1]}</a>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
