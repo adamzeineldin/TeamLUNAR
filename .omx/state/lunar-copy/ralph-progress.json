@@ -1,0 +1,14 @@
+{
+  "score": 97,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "The overview is reduced to two short sentences about cargo transport in the Moon\u2019s southern region.",
+    "Slogans, em dashes, and claims that a particular rover/recovery design has been chosen are removed."
+  ],
+  "suggestions": [],
+  "reasoning": "The shorter copy remains readable and well-spaced on desktop and phones. All copy and layout checks pass at 320, 390, and 1440 pixels.",
+  "threshold": 90,
+  "threshold_pass": true,
+  "next_actions": []
+}

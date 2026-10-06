@@ -1,0 +1,62 @@
+{
+  "results": [
+    {
+      "width": 320,
+      "overflow": false,
+      "brokenImages": 0,
+      "accessibilityViolations": 0
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "brokenImages": 0,
+      "accessibilityViolations": 0
+    },
+    {
+      "width": 390,
+      "overflow": false,
+      "brokenImages": 0,
+      "accessibilityViolations": 0
+    },
+    {
+      "width": 640,
+      "overflow": false,
+      "brokenImages": 0,
+      "accessibilityViolations": 0
+    },
+    {
+      "width": 768,
+      "overflow": false,
+      "brokenImages": 0,
+      "accessibilityViolations": 0
+    },
+    {
+      "width": 1024,
+      "overflow": false,
+      "brokenImages": 0,
+      "accessibilityViolations": 0
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "brokenImages": 0,
+      "accessibilityViolations": 0
+    }
+  ],
+  "teamPreserved": true,
+  "navigation": "pass",
+  "menuKeyboardOutsideAndResize": "pass",
+  "skipLink": "pass",
+  "moonScrollAndReducedMotion": "pass",
+  "threeYearRoadmap": "pass",
+  "biographies": 14,
+  "browserErrors": [],
+  "build": "pass",
+  "lint": {
+    "files": 7,
+    "errors": 0,
+    "warnings": 0
+  },
+  "visualVerdict": 96,
+  "diffWhitespace": "pass"
+}

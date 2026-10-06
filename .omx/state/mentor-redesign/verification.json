@@ -1,0 +1,33 @@
+{
+  "results": [
+    {
+      "width": 320,
+      "overflow": false,
+      "accessibilityViolations": 0
+    },
+    {
+      "width": 390,
+      "overflow": false,
+      "accessibilityViolations": 0
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "accessibilityViolations": 0
+    }
+  ],
+  "emDashes": 0,
+  "teamProfiles": 13,
+  "contact": "preserved",
+  "browserErrors": [],
+  "build": "pass",
+  "lint": {
+    "files": 7,
+    "errors": 0,
+    "warnings": 0
+  },
+  "changedFiles": [
+    "src/components/Team.jsx"
+  ],
+  "visualVerdict": 97
+}
