@@ -27,6 +27,15 @@ export default function Team() {
             </div>
           </div>
         </section>
+        <section aria-labelledby="librarian-title" className="mb-12 border-t border-line pt-10 sm:mb-16 sm:pt-12">
+          <div className="grid gap-8 lg:grid-cols-[1fr_2fr] lg:gap-12">
+            <p className="text-xs uppercase tracking-widest text-muted">Gemstone Librarian</p>
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
+              <img src={`${import.meta.env.BASE_URL}images/team/nevenka-zdravkovska.png`} alt="Nevenka Zdravkovska" width="792" height="792" loading="lazy" decoding="async" className="size-36 shrink-0 rounded-full border border-line object-cover sm:size-44" />
+              <h3 id="librarian-title" className="text-3xl font-medium tracking-tight sm:text-4xl">Nevenka Zdravkovska</h3>
+            </div>
+          </div>
+        </section>
         <ul className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {team.map((member) => (
             <li key={member.email} className="min-w-0 border-b border-line pb-6">
